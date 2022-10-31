@@ -6,23 +6,20 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Buf<T> implements WritingBuf<T>, ReadingBuf<T> {
     private T content = null;
-    private final Lock lockW = new ReentrantLock();
-    private final Lock lockR = new ReentrantLock();
+    private final Lock lockRW = new ReentrantLock();
     @Override
     public boolean writeInBuf(T newObject) {
         boolean successOfWriting = false;
         try {
-            if (lockW.tryLock(10, TimeUnit.SECONDS)) {
+            if (lockRW.tryLock(10, TimeUnit.SECONDS)) {
                 if (content != null) throw new Exception("Content is full");
                 content = newObject;
-                lockR.unlock();
                 successOfWriting = true;
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e){
-            lockW.unlock();
-            e.printStackTrace();
+        }finally {
+            lockRW.unlock();
         }
         return successOfWriting;
     }
@@ -30,17 +27,15 @@ public class Buf<T> implements WritingBuf<T>, ReadingBuf<T> {
     public T readFromBuf() {
         T objectFromContent = null;
         try {
-            if (lockR.tryLock(10, TimeUnit.SECONDS)) {
+            if (lockRW.tryLock(10, TimeUnit.SECONDS)) {
                 if (content == null) throw new Exception("Content is empty");
                 objectFromContent = content;
                 content = null;
-                lockW.unlock();
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e){
-            lockR.unlock();
-            e.printStackTrace();
+        } finally {
+            lockRW.unlock();
         }
         return objectFromContent;
     }
