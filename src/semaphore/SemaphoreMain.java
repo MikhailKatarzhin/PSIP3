@@ -12,6 +12,7 @@ public class SemaphoreMain {
 
     public static void main(String[] args) throws InterruptedException {
 
+        long millis = System.currentTimeMillis();
         final int nWritings = 10;
         final int nWriters = 10;
         final int nReaders = 5;
@@ -71,5 +72,7 @@ public class SemaphoreMain {
             thread.join();
         for (Thread thread: threadsReaders)
             thread.join();
+
+        System.out.println("\n\nProgram continued " + ((System.currentTimeMillis() - millis)) + " milliseconds.");
     }
 }

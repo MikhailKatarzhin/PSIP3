@@ -8,10 +8,11 @@ public class LockMain {
     static AtomicInteger writingFinish = new AtomicInteger(0);
     public static void main(String[] args) throws InterruptedException {
 
+        long millis = System.currentTimeMillis();
         final Buf<Integer> buffer= new Buf<>();
         final int nWritings = 10;
-        final int nWriters = 5;
-        final int nReaders = 10;
+        final int nWriters = 10;
+        final int nReaders = 5;
 
         ArrayList<Thread> threadsReaders = new ArrayList<>();
         for (int i = 0; i < nReaders; i++) {
@@ -52,5 +53,7 @@ public class LockMain {
             thread.join();
         for (Thread thread: threadsReaders)
             thread.join();
+
+        System.out.println("\n\nProgram continued " + ((System.currentTimeMillis() - millis)) + " milliseconds.");
     }
 }
