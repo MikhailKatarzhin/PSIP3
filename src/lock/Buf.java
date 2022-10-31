@@ -17,7 +17,7 @@ public class Buf<T> implements WritingBuf<T>, ReadingBuf<T> {
                 successOfWriting = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }finally {
             lockRW.unlock();
         }
@@ -33,7 +33,7 @@ public class Buf<T> implements WritingBuf<T>, ReadingBuf<T> {
                 content = null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally {
             lockRW.unlock();
         }
